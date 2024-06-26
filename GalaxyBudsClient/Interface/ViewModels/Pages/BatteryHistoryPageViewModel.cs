@@ -16,7 +16,7 @@ using ScottPlot;
 using ScottPlot.AxisRules;
 using ScottPlot.Plottables;
 using ScottPlot.TickGenerators;
-using Serilog;
+using SkiaSharp;
 
 namespace GalaxyBudsClient.Interface.ViewModels.Pages;
 
@@ -38,7 +38,6 @@ public class BatteryHistoryPageViewModel : SubPageViewModelBase
     [Reactive] public BatteryHistoryTimeSpans SelectedTimeSpan { set; get; } = BatteryHistoryTimeSpans.Last12Hours;
     [Reactive] public BatteryHistoryTools SelectedTool { set; get; } = BatteryHistoryTools.PanAndZoom;
 
-    // TODO show warning if not enough data is available
     public BatteryHistoryPageViewModel()
     {
         PropertyChanged += OnPropertyChanged;
@@ -159,7 +158,9 @@ public class BatteryHistoryPageViewModel : SubPageViewModelBase
         }
         
         overlay?.AddNullFrame(DateTimeOffset.Now.DateTime.ToOADate());
-        
+        var font = SKFontManager.Default.MatchCharacter(Strings.Left[0]).FamilyName;
+        Plot.Legend.FontName = font;
+
         var plotBatteryL = Plot.Add.Scatter(timestamp, batteryL);
         plotBatteryL.MarkerShape = MarkerShape.None;
         plotBatteryL.LineWidth = 2;
@@ -181,9 +182,10 @@ public class BatteryHistoryPageViewModel : SubPageViewModelBase
         
         Plot.Axes.Left.TickGenerator = new NumericAutomatic
         {
-            LabelFormatter = value => value is < 0 or > 100 ? string.Empty : NumericAutomatic.DefaultLabelFormatter(value), 
+            LabelFormatter = value => value is < 0 or > 100 ? string.Empty : NumericAutomatic.DefaultLabelFormatter(value)
         };
-        
+
+        Plot.Font.Set(font);
         Plot.YLabel(Strings.BattHistYAxis);
         UpdateLegendVisibility();
         

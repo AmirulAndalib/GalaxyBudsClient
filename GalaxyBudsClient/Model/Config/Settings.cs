@@ -3,8 +3,13 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Security;
 using System.Text.Json;
-using GalaxyBudsClient.Model.Hotkeys;
+using Avalonia.Threading;
+using GalaxyBudsClient.Generated.I18N;
+using GalaxyBudsClient.Interface;
+using GalaxyBudsClient.Interface.Dialogs;
+using GalaxyBudsClient.Model.Constants;
 using GalaxyBudsClient.Platform;
 using Serilog;
 
@@ -34,6 +39,9 @@ public static class Settings
         Data.CustomActionLeft.PropertyChanged += OnTouchActionPropertyChanged;
         Data.CustomActionRight.PropertyChanged += OnTouchActionPropertyChanged;
     }
+    
+    public static Themes DefaultTheme => PlatformUtils.SupportsMicaTheme ? Themes.DarkMica : 
+        PlatformUtils.SupportsBlurTheme ? Themes.DarkBlur : Themes.Dark;
     
     private static void OnTouchActionPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
@@ -79,6 +87,18 @@ public static class Settings
         }
         catch (Exception e)
         {
+            if (MainWindow.Instance.IsVisible && e is UnauthorizedAccessException or SecurityException)
+            {
+                Dispatcher.UIThread.Post(() =>
+                {
+                    _ = new MessageBox
+                    {
+                        Title = Strings.Error,
+                        Description = string.Format(Strings.SettingsSaveFailNoAccess, Path)
+                    }.ShowAsync(MainWindow.Instance);
+                });
+            }
+            
             Log.Error(e, "Failed to save settings");
         }
     }

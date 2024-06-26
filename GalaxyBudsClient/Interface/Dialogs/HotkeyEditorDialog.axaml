@@ -4,8 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:dialogs="clr-namespace:GalaxyBudsClient.Interface.ViewModels.Dialogs"
              xmlns:ext="clr-namespace:GalaxyBudsClient.Interface.MarkupExtensions"
-             xmlns:hotkeys="clr-namespace:GalaxyBudsClient.Model.Hotkeys"
              xmlns:i18N="clr-namespace:GalaxyBudsClient.Generated.I18N"
+             xmlns:extPlatform="clr-namespace:GalaxyBudsClient.Interface.MarkupExtensions;assembly=GalaxyBudsClient.Platform"
              mc:Ignorable="d"
              Padding="0, 10"
              x:CompileBindings="True"
@@ -37,7 +37,7 @@
             <HeaderedContentControl Grid.Column="2"
                                     Classes="GroupBox"
                                     Header="{ext:Translate {x:Static i18N:Keys.HotkeyEditKeys}}">
-                <ComboBox ItemsSource="{Binding Source={ext:KeysBindingSource}}"
+                <ComboBox ItemsSource="{Binding Source={extPlatform:KeysBindingSource}}"
                           SelectedValue="{Binding Key1}"
                           HorizontalAlignment="Stretch" />
             </HeaderedContentControl>

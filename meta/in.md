@@ -4,7 +4,7 @@ This file is auto-generated and automatically updated. Do not modify this file m
 
 <table>
 <tr><th>Progress</th><th>Count</th></tr>
-<tr><td>29%</td><td>360 missing string(s)</td></tr>
+<tr><td>29%</td><td>361 missing string(s)</td></tr>
 </table>
 
 ### Missing strings
@@ -96,7 +96,7 @@ Right: {1}</td></tr>
 <tr><td><code>devsel_nodevices</code></td><td>Please connect and pair your earbuds first</td></tr>
 <tr><td><code>devsel_nodevices_title</code></td><td>No paired devices found</td></tr>
 <tr><td><code>devsel_winrt_title</code></td><td>Use alternative Bluetooth backend</td></tr>
-<tr><td><code>devsel_winrt</code></td><td>Much better stability, but may not work on all PCs with some Bluetooth adapters</td></tr>
+<tr><td><code>devsel_winrt</code></td><td>Much better stability, but may not work on all PCs with some Bluetooth adapters (A restart may be required!)</td></tr>
 <tr><td><code>devices_header</code></td><td>Paired devices</td></tr>
 <tr><td><code>devices_new</code></td><td>New</td></tr>
 <tr><td><code>devices_new_long</code></td><td>Pair new device</td></tr>
@@ -223,6 +223,7 @@ The overlay data may be hard to understand when viewing large time ranges. Hover
 Measure time: Select a horizontal span to measure the elapsed time between the start and end of the selection.
         
 Measure level: Select a vertical span to measure the battery level difference between the start and end of the selection.</td></tr>
+<tr><td><code>settings_save_fail_no_access</code></td><td>Failed to save settings. Access to the configuration file has been denied by the operating system. Please check the file permissions for {0}.</td></tr>
 <tr><td><code>settings_appearance</code></td><td>Appearance</td></tr>
 <tr><td><code>settings_blurstrength</code></td><td>Window blur strength</td></tr>
 <tr><td><code>settings_blurstrength_description</code></td><td>Only compatible with dark mode. Not supported on all systems</td></tr>

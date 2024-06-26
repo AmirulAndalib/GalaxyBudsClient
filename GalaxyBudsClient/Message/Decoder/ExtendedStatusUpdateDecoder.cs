@@ -51,7 +51,7 @@ public class ExtendedStatusUpdateDecoder : BaseMessageDecoder, IBasicStatusUpdat
     public DeviceIds ColorR { init; get; }
     [Device(Models.BudsPlus, Selector.GreaterEqual)]
     public DeviceIds DeviceColor => IsCoupled ? ColorR != 0 ? ColorR : ColorL : 
-        (MainConnection == DevicesInverted.R ? ColorR : ColorL);
+        MainConnection == DevicesInverted.R ? ColorR : ColorL;
     
     [Device(Models.BudsPlus, Selector.GreaterEqual)]
     public bool AdjustSoundSync { init; get; }

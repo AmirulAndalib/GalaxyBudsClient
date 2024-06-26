@@ -5,12 +5,12 @@
              xmlns:ui="using:FluentAvalonia.UI.Controls"
              xmlns:ic="clr-namespace:FluentIcons.Avalonia.Fluent;assembly=FluentIcons.Avalonia.Fluent"
              xmlns:ext="clr-namespace:GalaxyBudsClient.Interface.MarkupExtensions"
-             xmlns:platform="clr-namespace:GalaxyBudsClient.Platform"
              xmlns:controls="clr-namespace:GalaxyBudsClient.Interface.Controls"
              xmlns:pages="clr-namespace:GalaxyBudsClient.Interface.ViewModels.Pages"
              xmlns:converters="clr-namespace:GalaxyBudsClient.Interface.Converters"
              xmlns:i18N="clr-namespace:GalaxyBudsClient.Generated.I18N"
              xmlns:config="clr-namespace:GalaxyBudsClient.Model.Config"
+             xmlns:platform="clr-namespace:GalaxyBudsClient.Platform;assembly=GalaxyBudsClient.Platform"
              mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="1200"
              x:Class="GalaxyBudsClient.Interface.Pages.SettingsPage"
              x:CompileBindings="True"
@@ -38,12 +38,12 @@
                                Theme="{StaticResource CaptionTextBlockStyle}" />
 
                     <TextBlock Theme="{StaticResource CaptionTextBlockStyle}"
-                               Text="https://github.com/thepbone/GalaxyBudsClient"
+                               Text="https://github.com/timschneeb/GalaxyBudsClient"
                                Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                                Cursor="Hand">
                         <Interaction.Behaviors>
                             <EventTriggerBehavior EventName="PointerPressed">
-                                <ext:OpenLinkAction TargetUri="https://github.com/thepbone/GalaxyBudsClient" />
+                                <ext:OpenLinkAction TargetUri="https://github.com/timschneeb/GalaxyBudsClient" />
                             </EventTriggerBehavior>
                         </Interaction.Behaviors>
                     </TextBlock>
@@ -72,7 +72,7 @@
                                                ItemsSource="{Binding ., Source={ext:ThemesBindingSource}}"
                                                SelectedValue="{Binding Theme, Source={x:Static config:Settings.Data}}">
                     <Interaction.Behaviors>
-                        <ext:LocalizationAwareComboBoxBehavior></ext:LocalizationAwareComboBoxBehavior>
+                        <ext:LocalizationAwareComboBoxBehavior />
                     </Interaction.Behaviors>
                 </controls:SettingsComboBoxItem>
                 
@@ -210,7 +210,7 @@
                                              IsClickEnabled="True">
                     <Interaction.Behaviors>
                         <EventTriggerBehavior EventName="Click">
-                            <ext:OpenLinkAction TargetUri="https://github.com/thepbone/GalaxyBudsClient" />
+                            <ext:OpenLinkAction TargetUri="https://github.com/timschneeb/GalaxyBudsClient" />
                         </EventTriggerBehavior>
                     </Interaction.Behaviors>
                 </controls:SettingsSymbolItem>

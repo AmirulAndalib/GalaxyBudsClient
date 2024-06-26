@@ -10,7 +10,6 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
 using Avalonia.Threading;
-using GalaxyBudsClient.Bluetooth;
 using GalaxyBudsClient.Generated.I18N;
 using GalaxyBudsClient.Interface.Dialogs;
 using GalaxyBudsClient.Interface.StyledWindow;
@@ -142,8 +141,8 @@ public partial class MainWindow : StyledAppWindow
                 WindowLauncher.ShowDevTools(this);
             }
             
-            HotkeyReceiver.Reset();
-            HotkeyReceiver.Instance.Update(true);
+            HotkeyReceiverManager.Reset();
+            HotkeyReceiverManager.Instance.Update(true);
         }
 
         if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
@@ -205,7 +204,7 @@ public partial class MainWindow : StyledAppWindow
             }
 
 #if OSX
-            ThePBone.OSX.Native.Unmanaged.AppUtils.setHideInDock(false);
+            GalaxyBudsClient.Platform.OSX.AppUtils.setHideInDock(false);
 #endif
             Show();
                 
@@ -219,7 +218,7 @@ public partial class MainWindow : StyledAppWindow
     private void BringToTray()
     {
 #if OSX
-        ThePBone.OSX.Native.Unmanaged.AppUtils.setHideInDock(true);
+        GalaxyBudsClient.Platform.OSX.AppUtils.setHideInDock(true);
 #endif
         Hide();
     }
@@ -246,7 +245,7 @@ public partial class MainWindow : StyledAppWindow
         if (_lastWearState == LegacyWearStates.None &&
             e.WearState != LegacyWearStates.None && Settings.Data.ResumePlaybackOnSensor)
         {
-            MediaKeyRemote.Instance.Play();
+            Platform.PlatformImpl.MediaKeyRemote.Play();
         }
             
         // Update dynamic tray icon
@@ -282,23 +281,26 @@ public partial class MainWindow : StyledAppWindow
         _popupShown = false;
     }
 
-    private async void OnBluetoothError(object? sender, BluetoothException e)
+    private void OnBluetoothError(object? sender, BluetoothException e)
     {
-        WindowIconRenderer.ResetIconToDefault();
-            
-        switch (e.ErrorCode)
+        _ = Dispatcher.UIThread.InvokeAsync(async () =>
         {
-            case BluetoothException.ErrorCodes.NoAdaptersAvailable:
-                await new MessageBox
-                {
-                    Title = Strings.Error,
-                    Description = Strings.Nobluetoothdev
-                }.ShowAsync();
-                break;
-            default:
-                _popupShown = false;
-                break;
-        }
+            WindowIconRenderer.ResetIconToDefault();
+            
+            switch (e.ErrorCode)
+            {
+                case BluetoothException.ErrorCodes.NoAdaptersAvailable:
+                    await new MessageBox
+                    {
+                        Title = Strings.Error,
+                        Description = Strings.Nobluetoothdev
+                    }.ShowAsync();
+                    break;
+                default:
+                    _popupShown = false;
+                    break;
+            }
+        });
     }
 
     private void OnDisconnected(object? sender, string e)
@@ -385,8 +387,8 @@ public partial class MainWindow : StyledAppWindow
                     Log.Error("CustomAction.HotkeyBroadcast: Caused by combo: {Param}", action.Parameter);
                     return;
                 }
-
-                HotkeyBroadcast.Instance.SendKeys(keys);
+                
+                Platform.PlatformImpl.HotkeyBroadcast.SendKeys(keys);
                 break;
         }
     }

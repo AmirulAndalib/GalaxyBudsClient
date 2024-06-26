@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using GalaxyBudsClient.Bluetooth;
 using GalaxyBudsClient.Model.Constants;
+using GalaxyBudsClient.Platform.Model;
 using ReactiveUI.Fody.Helpers;
 
 namespace GalaxyBudsClient.Interface.ViewModels.Dialogs;

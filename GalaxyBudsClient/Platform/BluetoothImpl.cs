@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Controls;
-using GalaxyBudsClient.Bluetooth;
+using Avalonia.Threading;
 using GalaxyBudsClient.Generated.I18N;
 using GalaxyBudsClient.Message;
 using GalaxyBudsClient.Message.Encoder;
@@ -13,6 +13,9 @@ using GalaxyBudsClient.Model;
 using GalaxyBudsClient.Model.Config;
 using GalaxyBudsClient.Model.Constants;
 using GalaxyBudsClient.Model.Specifications;
+using GalaxyBudsClient.Platform.Interfaces;
+using GalaxyBudsClient.Platform.Model;
+using GalaxyBudsClient.Platform.Stubs;
 using GalaxyBudsClient.Scripting;
 using GalaxyBudsClient.Utils;
 using ReactiveUI;
@@ -89,37 +92,14 @@ public sealed class BluetoothImpl : ReactiveObject, IDisposable
 
     private BluetoothImpl()
     {
+        IBluetoothService? backend = null;
+        
         try
         {
             // We don't want to initialize the backend in design mode. It would conflict with the actual application.
             if (!Design.IsDesignMode)
             {
-#if Windows
-                if (PlatformUtils.IsWindows && Settings.Data.UseBluetoothWinRt
-                                            && PlatformUtils.IsWindowsContractsSdkSupported)
-                {
-                    Log.Debug("BluetoothImpl: Using WinRT.BluetoothService");
-                    _backend = new Bluetooth.WindowsRT.BluetoothService();
-                }
-                else if (PlatformUtils.IsWindows)
-                {
-                    Log.Debug("BluetoothImpl: Using Windows.BluetoothService");
-                    _backend = new Bluetooth.Windows.BluetoothService();
-                }
-#elif Linux
-                if (PlatformUtils.IsLinux)
-
-                {
-                    Log.Debug("BluetoothImpl: Using Linux.BluetoothService");
-                    _backend = new Bluetooth.Linux.BluetoothService();
-                }
-#elif OSX
-                if (PlatformUtils.IsOSX)
-                {
-                    Log.Debug("BluetoothImpl: Using OSX.BluetoothService");
-                    _backend = new ThePBone.OSX.Native.BluetoothService();
-                }
-#endif
+                backend = PlatformImpl.Creator.CreateBluetoothService();
             }
         }
         catch (PlatformNotSupportedException)
@@ -127,12 +107,13 @@ public sealed class BluetoothImpl : ReactiveObject, IDisposable
             Log.Error("BluetoothImpl: Critical error while preparing bluetooth backend");
         }
 
-        if (_backend == null)
+        if (backend == null)
         {
             Log.Warning("BluetoothImpl: Using Dummy.BluetoothService");
-            _backend = new Dummy.BluetoothService();
+            backend = new DummyBluetoothService();
         }
         
+        _backend = backend;
         _loop = Task.Run(DataConsumerLoop, _loopCancelSource.Token);
             
         _backend.Connecting += (_, _) =>
@@ -267,7 +248,7 @@ public sealed class BluetoothImpl : ReactiveObject, IDisposable
     {
         if (alternative != AlternativeModeEnabled)
         {
-            Log.Error($"BluetoothImpl: Connection attempt in wrong mode {alternative}");
+            Log.Error("BluetoothImpl: Connection attempt in wrong mode {Alternative}", alternative);
             return false;
         }
         // Create new cancellation token source if the previous one has already been used
@@ -394,7 +375,7 @@ public sealed class BluetoothImpl : ReactiveObject, IDisposable
         try
         {
             var data = msg.Msg.Encode(true);
-            Log.Verbose($"<< Outgoing (alt): {msg}");
+            Log.Verbose("<< Outgoing (alt): {Msg}", msg);
             await _backend.SendAsync(data);
         }
         catch (BluetoothException ex)
@@ -465,9 +446,15 @@ public sealed class BluetoothImpl : ReactiveObject, IDisposable
 
     private void OnRfcommConnected(object? sender, EventArgs e)
     {
+        if(!HasValidDevice)
+        {
+            Log.Error("BluetoothImpl: Suppressing Connected event, device not properly registered");
+            return;
+        }
+        
         _ = Task.Delay(150).ContinueWith(_ =>
         {
-            if (HasValidDevice)
+            Dispatcher.UIThread.Post(() =>
             {
                 if (AlternativeModeEnabled)
                 {
@@ -479,11 +466,7 @@ public sealed class BluetoothImpl : ReactiveObject, IDisposable
                     IsConnected = true;
                     Connected?.Invoke(this, EventArgs.Empty);
                 }
-            }
-            else
-            {
-                Log.Error("BluetoothImpl: Suppressing Connected event, device not properly registered");
-            }
+            });
         });
     }
     
@@ -566,7 +549,7 @@ public sealed class BluetoothImpl : ReactiveObject, IDisposable
         }
         catch (Exception ex)
         {
-            Log.Error("Failed processing packet {ex}", ex);
+            Log.Error(ex, "Failed processing packet");
         }
     }
 }

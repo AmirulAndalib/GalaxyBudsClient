@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.ReactiveUI;
 using GalaxyBudsClient.Cli;
 using GalaxyBudsClient.Cli.Ipc;
 using GalaxyBudsClient.Model.Config.Legacy;
@@ -21,10 +21,11 @@ using Sentry;
 
 namespace GalaxyBudsClient;
 
-// ReSharper disable once UnusedType.Global
+// Called by AsyncErrorHandler.Fody using IL weaving
+[SuppressMessage("ReSharper", "UnusedType.Global")]
 public static class AsyncErrorHandler
 {
-    // Called by AsyncErrorHandler.Fody using IL weaving
+    [SuppressMessage("ReSharper", "UnusedMember.Global")]
     public static void HandleException(Exception exception)
     {
 #if !DEBUG
@@ -47,15 +48,22 @@ internal static class Program
         StartedAt = Stopwatch.GetTimestamp();
      
 #if Windows
-        ThePBone.Interop.Win32.WindowsUtils.AttachConsole();
+        GalaxyBudsClient.Platform.Windows.WindowsUtils.AttachConsole();
 #endif
 
         var logPath = PlatformUtils.CombineDataPath("application.log");
         var prevLogPath = PlatformUtils.CombineDataPath("application-prev.log");
         // Rotate logs on startup
-        if (File.Exists(logPath))
-            File.Move(logPath, prevLogPath, true);
-        
+        try
+        {
+            if (File.Exists(logPath))
+                File.Move(logPath, prevLogPath, true);
+        }
+        catch (Exception)
+        {
+            // Windows: exception is thrown when two instances are launched, because the first one is still using the log file
+        }
+
         var config = new LoggerConfiguration()
             .WriteTo.File(logPath)
             .WriteTo.Console();
@@ -132,7 +140,6 @@ internal static class Program
                 DisableSetProcessName = true
             })
             .UsePlatformDetect()
-            .UseReactiveUI()
             .LogToTrace()
             .WithInterFont();
 }

@@ -1,7 +1,6 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using GalaxyBudsClient.Model.Constants;
-using GalaxyBudsClient.Model.Hotkeys;
 using GalaxyBudsClient.Platform;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -31,7 +30,7 @@ public class Device : ReactiveObject
 public class SettingsData : ReactiveObject
 {
     /* Appearance */
-    [Reactive] public Themes Theme { set; get; } = PlatformUtils.DefaultTheme;
+    [Reactive] public Themes Theme { set; get; } = Settings.DefaultTheme;
     [Reactive] public uint AccentColor { set; get; } = Avalonia.Media.Colors.Orange.ToUInt32();
     [Reactive] public int BlurStrength { set; get; } = 144;
     [Reactive] public Locales Locale { set; get; } = Locales.en;
@@ -41,7 +40,7 @@ public class SettingsData : ReactiveObject
     /* Connections */
     [Reactive] public bool UseBluetoothWinRt { set; get; } = true;
     [ReadOnly(true)] public ObservableCollection<Device> Devices { set; get; } = [];
-    [Reactive] public string? LastDeviceMac { set; get; } = null;
+    [Reactive] public string? LastDeviceMac { set; get; }
 
     
     /* Touch actions */
