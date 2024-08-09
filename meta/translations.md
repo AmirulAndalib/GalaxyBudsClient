@@ -7,7 +7,7 @@ Translation instructions are available [in the wiki](https://github.com/ThePBone
 <table>
 <tr><th>Language</th><th>Progress</th><th>Missing strings</th><th>Details</th></tr>
 <tr><td>cn (China)</td><td>98%</td><td>10 missing string(s)</td><td><a href="cn.md">View details</a></td></tr>
-<tr><td>cz (Czechia)</td><td>82%</td><td>93 missing string(s)</td><td><a href="cz.md">View details</a></td></tr>
+<tr><td>cz (Czechia)</td><td>100%</td><td>No missing strings</td><td><a href="cz.md">View details</a></td></tr>
 <tr><td>de (Germany)</td><td>47%</td><td>274 missing string(s)</td><td><a href="de.md">View details</a></td></tr>
 <tr><td>es (Spain)</td><td>28%</td><td>374 missing string(s)</td><td><a href="es.md">View details</a></td></tr>
 <tr><td>fr (France)</td><td>58%</td><td>215 missing string(s)</td><td><a href="fr.md">View details</a></td></tr>
@@ -17,7 +17,7 @@ Translation instructions are available [in the wiki](https://github.com/ThePBone
 <tr><td>in (India)</td><td>28%</td><td>371 missing string(s)</td><td><a href="in.md">View details</a></td></tr>
 <tr><td>it (Italy)</td><td>50%</td><td>259 missing string(s)</td><td><a href="it.md">View details</a></td></tr>
 <tr><td>ja (undefined)</td><td>28%</td><td>374 missing string(s)</td><td><a href="ja.md">View details</a></td></tr>
-<tr><td>ko (undefined)</td><td>65%</td><td>178 missing string(s)</td><td><a href="ko.md">View details</a></td></tr>
+<tr><td>ko (undefined)</td><td>72%</td><td>143 missing string(s)</td><td><a href="ko.md">View details</a></td></tr>
 <tr><td>nl (Netherlands)</td><td>65%</td><td>178 missing string(s)</td><td><a href="nl.md">View details</a></td></tr>
 <tr><td>pt (Portugal)</td><td>28%</td><td>371 missing string(s)</td><td><a href="pt.md">View details</a></td></tr>
 <tr><td>ro (Romania)</td><td>58%</td><td>215 missing string(s)</td><td><a href="ro.md">View details</a></td></tr>
